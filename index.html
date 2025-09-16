@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ YLC Creative Writing Challenge ✨</title>
+  <style>
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to bottom right, #7C1948, #BB96F6);
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      border: 4px solid #7C1948;
+      border-radius: 18px;
+      width: 95vw; max-width: 1280px;
+      aspect-ratio: 16/9;
+      padding: 15px;
+      display: flex; flex-direction: column;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+    h1 { text-align: center; margin: 0; color: #7C1948; font-size: 1.8em; }
+    p { text-align: center; margin: 5px 0 15px; }
+
+    /* Roles */
+    .roles { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 10px; font-size: 0.9em; }
+    .roles label { background: #f7f3fc; padding: 6px; border-radius: 8px; }
+    select, input { margin: 2px; padding: 4px 6px; border-radius: 6px; border: 1px solid #999; font-size: 0.9em; }
+
+    /* Timer + Date */
+    #timer, #date { text-align: center; font-weight: bold; margin: 5px 0; }
+    #timer { color: #7C1948; font-size: 1.2em; }
+
+    /* Level buttons */
+    .level-select { text-align: center; margin: 10px 0; }
+    .level-select button { margin: 0 5px; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+    .easy { background: #a8e6cf; }
+    .normal { background: #ffd93b; }
+    .challenge { background: #ff6f61; color: #fff; }
+
+    /* Inputs */
+    .input-area { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 10px; }
+    .field { display: flex; flex-direction: column; align-items: center; font-size: 0.9em; }
+    .story-area { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    canvas { border: 2px solid #7C1948; border-radius: 10px; background: #fafafa; width: 100%; height: 120px; touch-action: none; }
+
+    #story, #editor, #easy-story, #easy-editor, #normal-story, #normal-editor, #challenge-story, #challenge-editor {
+      background: #fdfdfd; padding: 10px; border-radius: 8px;
+      border: 1px solid #ccc; flex: 1; overflow-y: auto;
+      white-space: pre-wrap; font-size: 0.95em;
+    }
+    textarea { resize: none; font-family: inherit; }
+    footer { text-align: center; font-size: 0.75em; margin-top: 6px; color: #444; }
+    .level-section { display: none; }
+    button.generate { background: #7C1948; color: #fff; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; margin: 0 5px; }
+    button.generate:hover { background: #BB96F6; }
+
+    .verify { text-align: center; margin: 8px 0; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ YLC Creative Writing Challenge ✨</h1>
+    <p>Pick a level → Assign roles → Generate → Edit → Draw → Screenshot 📸</p>
+
+    <!-- Roles -->
+    <div class="roles">
+      <label>Role 1:
+        <select id="role1">
+          <option>✍️ Writer</option>
+          <option>🎨 Illustrator</option>
+          <option>🎤 Reporter</option>
+        </select>
+        <input id="role1-name" placeholder="Name">
+      </label>
+      <label>Role 2:
+        <select id="role2">
+          <option>✍️ Writer</option>
+          <option>🎨 Illustrator</option>
+          <option>🎤 Reporter</option>
+        </select>
+        <input id="role2-name" placeholder="Name">
+      </label>
+      <label>Role 3 (optional):
+        <select id="role3">
+          <option>✍️ Writer</option>
+          <option>🎨 Illustrator</option>
+          <option>🎤 Reporter</option>
+        </select>
+        <input id="role3-name" placeholder="Name">
+      </label>
+    </div>
+    <div id="date"></div>
+    <div id="timer">⏳ 10:00</div>
+
+    <!-- Level Selector -->
+    <div class="level-select">
+      <button class="easy" onclick="showLevel('easy')">🟢 Easy</button>
+      <button class="normal" onclick="showLevel('normal')">🟡 Normal</button>
+      <button class="challenge" onclick="showLevel('challenge')">🔴 Challenge</button>
+    </div>
+
+    <!-- EASY -->
+    <div id="easy" class="level-section">
+      <div class="input-area">
+        <div class="field"><label>Name</label>
+          <select id="easy-name"><option value="">--Choose--</option><option>Alex</option><option>Mia</option></select>
+          <input id="easy-name-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Place</label>
+          <select id="easy-place"><option value="">--Choose--</option><option>park</option><option>beach</option></select>
+          <input id="easy-place-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Object</label>
+          <select id="easy-object"><option value="">--Choose--</option><option>ball</option><option>kite</option></select>
+          <input id="easy-object-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Feeling</label>
+          <select id="easy-feeling"><option value="">--Choose--</option><option>happy</option><option>scared</option></select>
+          <input id="easy-feeling-custom" placeholder="Or type your own">
+        </div>
+      </div>
+      <div class="verify">
+        <input type="checkbox" id="easy-verify">
+        <label for="easy-verify">✅ Our team verifies this story is written by us, not AI-generated.</label>
+      </div>
+      <div class="button-area">
+        <button class="generate" onclick="updateStory('easy')">📖 Generate</button>
+        <button class="generate" onclick="updateStory('easy', true)">🔄 Regenerate</button>
+      </div>
+      <canvas id="easy-canvas"></canvas>
+      <div class="story-area">
+        <div id="easy-story">Your story will appear here.</div>
+        <textarea id="easy-editor" placeholder="Edit your story..."></textarea>
+      </div>
+    </div>
+
+    <!-- NORMAL -->
+    <div id="normal" class="level-section">
+      <div class="input-area">
+        <!-- Same dropdown + custom format -->
+        <div class="field"><label>Name</label>
+          <select id="normal-name"><option value="">--Choose--</option><option>Leo</option><option>Sara</option></select>
+          <input id="normal-name-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Friend</label>
+          <select id="normal-friend"><option value="">--Choose--</option><option>Tom</option><option>Ana</option></select>
+          <input id="normal-friend-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Place</label>
+          <select id="normal-place"><option value="">--Choose--</option><option>forest</option><option>city park</option></select>
+          <input id="normal-place-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Object</label>
+          <select id="normal-object"><option value="">--Choose--</option><option>map</option><option>lantern</option></select>
+          <input id="normal-object-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Activity</label>
+          <select id="normal-activity"><option value="">--Choose--</option><option>exploring</option><option>climbing</option></select>
+          <input id="normal-activity-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Problem</label>
+          <select id="normal-problem"><option value="">--Choose--</option><option>storm</option><option>lost</option></select>
+          <input id="normal-problem-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Solution</label>
+          <select id="normal-solution"><option value="">--Choose--</option><option>ask for help</option><option>work together</option></select>
+          <input id="normal-solution-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Emotion</label>
+          <select id="normal-emotion"><option value="">--Choose--</option><option>happy</option><option>scared</option></select>
+          <input id="normal-emotion-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Ending</label>
+          <select id="normal-ending"><option value="">--Choose--</option><option>they laughed</option><option>they went home</option></select>
+          <input id="normal-ending-custom" placeholder="Or type your own">
+        </div>
+      </div>
+      <div class="verify">
+        <input type="checkbox" id="normal-verify">
+        <label for="normal-verify">✅ I verify this story is written by us, not AI-generated.</label>
+      </div>
+      <div class="button-area">
+        <button class="generate" onclick="updateStory('normal')">📖 Generate</button>
+        <button class="generate" onclick="updateStory('normal', true)">🔄 Regenerate</button>
+      </div>
+      <canvas id="normal-canvas"></canvas>
+      <div class="story-area">
+        <div id="normal-story">Your story will appear here.</div>
+        <textarea id="normal-editor" placeholder="Edit your story..."></textarea>
+      </div>
+    </div>
+
+    <!-- CHALLENGE -->
+    <div id="challenge" class="level-section">
+      <div class="input-area">
+        <div class="field"><label>Name</label>
+          <select id="challenge-name"><option value="">--Choose--</option><option>Emma</option><option>Ryan</option></select>
+          <input id="challenge-name-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Friend</label>
+          <select id="challenge-friend"><option value="">--Choose--</option><option>Olivia</option><option>Ben</option></select>
+          <input id="challenge-friend-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Place</label>
+          <select id="challenge-place"><option value="">--Choose--</option><option>castle</option><option>mystery cave</option></select>
+          <input id="challenge-place-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Object</label>
+          <select id="challenge-object"><option value="">--Choose--</option><option>key</option><option>treasure chest</option></select>
+          <input id="challenge-object-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Activity</label>
+          <select id="challenge-activity"><option value="">--Choose--</option><option>exploring</option><option>decoding clues</option></select>
+          <input id="challenge-activity-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Problem</label>
+          <select id="challenge-problem"><option value="">--Choose--</option><option>storm</option><option>strange noise</option></select>
+          <input id="challenge-problem-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Solution</label>
+          <select id="challenge-solution"><option value="">--Choose--</option><option>use the map</option><option>work together</option></select>
+          <input id="challenge-solution-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Sensory</label>
+          <select id="challenge-sensory"><option value="">--Choose--</option><option>a cold wind blew</option><option>footsteps echoed</option></select>
+          <input id="challenge-sensory-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Dialogue</label>
+          <select id="challenge-dialogue"><option value="">--Choose--</option><option>"I hear something!"</option><option>"We can do this!"</option></select>
+          <input id="challenge-dialogue-custom" placeholder="Or type your own">
+        </div>
+        <div class="field"><label>Ending</label>
+          <select id="challenge-ending"><option value="">--Choose--</option><option>they solved the mystery</option><option>they escaped safely</option></select>
+          <input id="challenge-ending-custom" placeholder="Or type your own">
+        </div>
+      </div>
+      <div class="verify">
+        <input type="checkbox" id="challenge-verify">
+        <label for="challenge-verify">✅ I verify this story is written by me, not AI-generated.</label>
+      </div>
+      <div class="button-area">
+        <button class="generate" onclick="updateStory('challenge')">📖 Generate</button>
+        <button class="generate" onclick="updateStory('challenge', true)">🔄 Regenerate</button>
+      </div>
+      <canvas id="challenge-canvas"></canvas>
+      <div class="story-area">
+        <div id="challenge-story">Your story will appear here.</div>
+        <textarea id="challenge-editor" placeholder="Edit your story..."></textarea>
+      </div>
+    </div>
+
+    <footer>All rights reserved © Young Learners Curriculum 2025</footer>
+  </div>
+
+  <script>
+    // === DATE ===
+    document.getElementById('date').textContent =
+      "📅 " + new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    // === TIMER ===
+    let countdown;
+    function startTimer(duration = 600) {
+      let timeLeft = duration;
+      const timerDisplay = document.getElementById('timer');
+      clearInterval(countdown);
+      countdown = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = `⏳ ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLeft <= 0) { clearInterval(countdown); timerDisplay.textContent = "⏰ Time's up!"; timerDisplay.style.color = "red"; }
+        timeLeft--;
+      }, 1000);
+    }
+    startTimer();
+
+    // === SHOW LEVEL ===
+    function showLevel(level) {
+      document.querySelectorAll('.level-section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(level).style.display = 'block';
+    }
+
+    // === ARRAYS (👉 add 20 templates each) ===
+    const easyTemplates = [
+  "[name] went to the [place] with a [object]. They felt [feeling].",
+  "One day [name] found a [object] at the [place]. It made them feel [feeling].",
+  "[name] and [friend] walked to the [place]. They carried a [object] and were [feeling].",
+  "At the [place], [name] played with a [object]. They felt [feeling].",
+  "[name] brought a [object] to the [place]. [friend] came too and felt [feeling].",
+  "In the [place], [name] and [friend] shared a [object]. They felt [feeling].",
+  "[name] saw [friend] at the [place]. They used a [object] and were [feeling].",
+  "[name] carried a [object] to the [place]. [friend] helped and they felt [feeling].",
+  "[name] went to the [place] early. They had a [object] and felt [feeling].",
+  "At the [place], [name] found a [object]. [friend] laughed and felt [feeling].",
+  "[name] invited [friend] to the [place]. They brought a [object] and were [feeling].",
+  "[name] ran to the [place] with a [object]. They laughed and felt [feeling].",
+  "[name] sat in the [place] with a [object]. [friend] joined and felt [feeling].",
+  "[friend] gave [name] a [object] at the [place]. They were [feeling].",
+  "At the [place], [name] and [friend] played with a [object]. They felt [feeling].",
+  "[name] looked at a [object] in the [place]. [friend] smiled and felt [feeling].",
+  "[name] showed [friend] a [object] in the [place]. They laughed and were [feeling].",
+  "[name] and [friend] carried a [object] to the [place]. They felt [feeling].",
+  "At the [place], [name] held a [object]. [friend] said hello and felt [feeling].",
+  "One afternoon, [name] and [friend] shared a [object] at the [place]. They were [feeling]."
+];
+    const normalTemplates = [
+  "[name] and [friend] went to the [place] with a [object]. They wanted to [activity], but [problem]. Together they [solution] and felt [emotion]. Finally, they [ending].",
+  "One day [name] packed a [object] and met [friend] at the [place]. They started to [activity], but [problem] happened. They [solution] and were [emotion]. At last, they [ending].",
+  "[friend] invited [name] to the [place]. They carried a [object] and tried to [activity]. Suddenly [problem]. They quickly [solution] and felt [emotion]. They [ending] happily.",
+  "[name] woke up [emotion] and went to the [place]. [friend] came with a [object]. They [activity] until [problem]. They [solution] and [ending].",
+  "At the [place], [name] and [friend] had a [object]. They started to [activity]. Then [problem] surprised them. They [solution] and felt [emotion]. At last they [ending].",
+  "[name] and [friend] planned to [activity] at the [place]. They used a [object], but then [problem]. They worked together to [solution]. In the end they were [emotion] and [ending].",
+  "In the [place], [name] showed [friend] a [object]. They wanted to [activity]. Suddenly [problem]. They decided to [solution] and felt [emotion]. Finally they [ending].",
+  "One morning [name] took a [object] to the [place]. [friend] joined to [activity]. Soon [problem]. They [solution] and felt [emotion]. They [ending] at the end of the day.",
+  "[friend] and [name] were excited to [activity] in the [place]. They brought a [object]. Then [problem] appeared. They [solution] and felt [emotion]. At last they [ending].",
+  "[name] saw [friend] at the [place]. They both carried a [object]. They wanted to [activity], but [problem]. They [solution] and [ending].",
+  "[name] dreamed of going to the [place]. With [friend], they brought a [object] to [activity]. But [problem]. They [solution] and felt [emotion]. Finally they [ending].",
+  "At the [place], [name] tried to [activity] with [friend]. They had a [object]. Suddenly [problem]. They [solution] and felt [emotion]. Finally they [ending].",
+  "[friend] asked [name] to bring a [object] to the [place]. They wanted to [activity]. [problem] came, but they [solution]. They felt [emotion] and [ending].",
+  "One summer day, [name] and [friend] carried a [object] to the [place]. They started to [activity]. [problem] stopped them, but they [solution]. They felt [emotion] and [ending].",
+  "[name] went to the [place] to [activity]. [friend] helped with a [object]. Then [problem]. They [solution] and [ending].",
+  "At the [place], [name] and [friend] used a [object]. They tried to [activity]. [problem] made it hard, but they [solution]. Finally they felt [emotion] and [ending].",
+  "[friend] met [name] in the [place]. They had a [object]. They wanted to [activity], but [problem]. They [solution] and [ending].",
+  "[name] carried a [object] to the [place]. [friend] joined to [activity]. [problem] started, but they [solution]. They felt [emotion] and [ending].",
+  "Together [name] and [friend] walked to the [place]. They had a [object]. They wanted to [activity]. [problem] came, but they [solution]. They [ending].",
+  "One afternoon [name] and [friend] took a [object] to the [place]. They began to [activity]. Suddenly [problem]. They [solution]. They felt [emotion] and [ending]."
+];
+    const challengeTemplates = [
+  "[name] and [friend] entered the [place] with a [object]. They began to [activity], but then [problem]. '[dialogue]' said [friend]. They [solution] while [sensory] surrounded them. Finally, they [ending].",
+  "As the sun set, [name] and [friend] walked into the [place]. Holding a [object], they tried to [activity]. Then [problem]. '[dialogue]' echoed. They [solution], with [sensory] around them, and finally [ending].",
+  "[name] carried the [object] into the [place]. '[dialogue]' whispered [friend]. They started [activity] when [problem] struck. They quickly [solution]. The air smelled of [sensory]. At last, they [ending].",
+  "Deep in the [place], [name] and [friend] found a [object]. They wanted to [activity], but [problem] happened. '[dialogue]' was heard. They [solution] while noticing [sensory]. In the end, they [ending].",
+  "On a bright morning, [name] and [friend] held a [object] at the [place]. They planned to [activity], but suddenly [problem]. '[dialogue]' made them laugh. They [solution], with [sensory] in the air, and finally [ending].",
+  "While [name] explored the [place] with [friend], they used a [object] to [activity]. Then [problem] appeared. '[dialogue]' shouted [name]. They [solution] while [sensory] filled the air. At the end, they [ending].",
+  "[friend] called [name] to meet at the [place]. '[dialogue]' began their adventure. They carried a [object] to [activity]. Suddenly [problem]. They [solution] while hearing [sensory]. Finally, they [ending].",
+  "[name] and [friend] planned to [activity] in the [place]. With a [object], they started well. But [problem] struck. '[dialogue]' said [friend]. They [solution] as [sensory] surrounded them. In the end, they [ending].",
+  "At the [place], [name] lifted a [object] and said '[dialogue]'. [friend] joined to [activity]. Suddenly [problem]. They [solution] while smelling [sensory]. Finally, they [ending].",
+  "The [place] was quiet until [name] and [friend] arrived. They carried a [object] to [activity]. '[dialogue]' echoed. Then [problem]. They [solution] while [sensory] surrounded them. Finally, they [ending].",
+  "One summer day, [name] brought a [object] to the [place]. [friend] said '[dialogue]'. They tried to [activity], but [problem]. They [solution] while [sensory] filled the air. In the end, they [ending].",
+  "[friend] waited for [name] in the [place]. '[dialogue]' began the adventure. They had a [object]. They started to [activity]. [problem] came, but they [solution]. They noticed [sensory] and [ending].",
+  "[name] told [friend], '[dialogue]' while holding a [object] in the [place]. They wanted to [activity]. [problem] happened. They [solution] and felt [sensory]. Finally, they [ending].",
+  "At the [place], [name] and [friend] prepared to [activity]. '[dialogue]' was said as they used a [object]. Suddenly [problem]. They [solution] while [sensory] spread. In the end, they [ending].",
+  "One evening [name] and [friend] reached the [place]. '[dialogue]' started their plan. They held a [object] to [activity]. Then [problem]. They [solution] as [sensory] surrounded them. Finally, they [ending].",
+  "[name] shouted '[dialogue]' while [friend] carried a [object] in the [place]. They started to [activity]. [problem] appeared. They [solution]. The air was full of [sensory]. They [ending].",
+  "In the [place], [name] and [friend] tried to [activity] with a [object]. '[dialogue]' was spoken. [problem] blocked them. They [solution] while [sensory] filled the air. Finally, they [ending].",
+  "One day [name] and [friend] walked into the [place]. '[dialogue]' was said. They carried a [object] and wanted to [activity]. Suddenly [problem]. They [solution]. They noticed [sensory] and [ending].",
+  "[friend] said '[dialogue]' to [name] as they carried a [object] to the [place]. They wanted to [activity]. [problem] happened. They [solution] while hearing [sensory]. Finally, they [ending].",
+  "[name] whispered '[dialogue]' as [friend] showed a [object] in the [place]. They planned to [activity]. Suddenly [problem]. They [solution]. Around them was [sensory]. In the end, they [ending]."
+];
+
+
+    // === HELPERS ===
+    function getValue(id, customId) {
+      return document.getElementById(customId).value.trim() || document.getElementById(id).value.trim() || "something";
+    }
+
+    let currentTemplate = { easy: null, normal: null, challenge: null };
+
+    // === UPDATE STORY ===
+    function updateStory(level, isRegenerate = false) {
+      if (!document.getElementById(level + "-verify").checked) {
+        alert("Please check the box to verify your story is your own work.");
+        return;
+      }
+
+      let template, inputs;
+
+      if (level === 'easy') {
+        if (!isRegenerate || !currentTemplate.easy) {
+          currentTemplate.easy = easyTemplates[Math.floor(Math.random() * easyTemplates.length)];
+        }
+        inputs = {
+          '[name]': getValue('easy-name', 'easy-name-custom'),
+          '[place]': getValue('easy-place', 'easy-place-custom'),
+          '[object]': getValue('easy-object', 'easy-object-custom'),
+          '[feeling]': getValue('easy-feeling', 'easy-feeling-custom')
+        };
+        template = currentTemplate.easy;
+        Object.keys(inputs).forEach(k => template = template.replaceAll(k, inputs[k]));
+        document.getElementById('easy-story').textContent = template;
+        document.getElementById('easy-editor').value = template;
+      }
+
+      if (level === 'normal') {
+        if (!isRegenerate || !currentTemplate.normal) {
+          currentTemplate.normal = normalTemplates[Math.floor(Math.random() * normalTemplates.length)];
+        }
+        inputs = {
+          '[name]': getValue('normal-name', 'normal-name-custom'),
+          '[friend]': getValue('normal-friend', 'normal-friend-custom'),
+          '[place]': getValue('normal-place', 'normal-place-custom'),
+          '[object]': getValue('normal-object', 'normal-object-custom'),
+          '[activity]': getValue('normal-activity', 'normal-activity-custom'),
+          '[problem]': getValue('normal-problem', 'normal-problem-custom'),
+          '[solution]': getValue('normal-solution', 'normal-solution-custom'),
+          '[emotion]': getValue('normal-emotion', 'normal-emotion-custom'),
+          '[ending]': getValue('normal-ending', 'normal-ending-custom')
+        };
+        template = currentTemplate.normal;
+        Object.keys(inputs).forEach(k => template = template.replaceAll(k, inputs[k]));
+        document.getElementById('normal-story').textContent = template;
+        document.getElementById('normal-editor').value = template;
+      }
+
+      if (level === 'challenge') {
+        if (!isRegenerate || !currentTemplate.challenge) {
+          currentTemplate.challenge = challengeTemplates[Math.floor(Math.random() * challengeTemplates.length)];
+        }
+        inputs = {
+          '[name]': getValue('challenge-name', 'challenge-name-custom'),
+          '[friend]': getValue('challenge-friend', 'challenge-friend-custom'),
+          '[place]': getValue('challenge-place', 'challenge-place-custom'),
+          '[object]': getValue('challenge-object', 'challenge-object-custom'),
+          '[activity]': getValue('challenge-activity', 'challenge-activity-custom'),
+          '[problem]': getValue('challenge-problem', 'challenge-problem-custom'),
+          '[solution]': getValue('challenge-solution', 'challenge-solution-custom'),
+          '[sensory]': getValue('challenge-sensory', 'challenge-sensory-custom'),
+          '[dialogue]': getValue('challenge-dialogue', 'challenge-dialogue-custom'),
+          '[ending]': getValue('challenge-ending', 'challenge-ending-custom')
+        };
+        template = currentTemplate.challenge;
+        Object.keys(inputs).forEach(k => template = template.replaceAll(k, inputs[k]));
+        document.getElementById('challenge-story').textContent = template;
+        document.getElementById('challenge-editor').value = template;
+      }
+    }
+  </script>
+</body>
+</html>
