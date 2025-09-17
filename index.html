@@ -16,9 +16,9 @@
       background: #fff;
       border: 4px solid #7C1948;
       border-radius: 18px;
-      width: 100%;          /* fluid fit */
+      width: 100%;
       max-width: 100%;
-      min-height: 600px;    /* keeps good height */
+      min-height: 600px;
       height: auto;
       padding: 15px;
       display: flex; flex-direction: column;
@@ -82,7 +82,7 @@
 
     #trophy { display: none; font-size: 1.5em; color: red; margin-top: 6px; }
     #reminder-banner { display:none; background:#ffd93b; padding:10px; text-align:center; font-size:1.2em; }
-    .confirm, .submit { text-align: center; margin-top: 10px; }
+    .submit { text-align: center; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -94,7 +94,7 @@
     </header>
 
     <div id="timer">⏳ 15:00</div>
-    <div class="directions">Step 1: Assign roles → Step 2: Generate → Step 3: Edit & Draw → Step 4: Verify & Submit 📸</div>
+    <div class="directions">Step 1: Assign roles → Step 2: Generate → Step 3: Edit & Draw → Step 4: Screenshot & Share 📸</div>
 
     <!-- Roles -->
     <div class="roles">
@@ -169,11 +169,14 @@
 
       <div id="trophy">🏆 Great job! You reached the requirement!</div>
 
-      <div class="confirm">
-        <label><input type="checkbox" id="verify-check" onchange="toggleContinue()"> ✅ We verify this story is our own work</label>
-      </div>
-      <div class="submit">
-        <button id="continue-btn" onclick="submitWork()" disabled>✅ Continue / Submit</button>
+      <div class="submit" style="text-align:center; margin-top:15px; font-weight:bold; color:#7C1948; background:#f7f3fc; padding:12px; border-radius:8px; line-height:1.6;">
+        📸 <u>Take a screenshot of your story and share it with your teacher to submit.</u><br><br>
+        💻 <b>Laptop / PC (Windows):</b> Press <b>PrtScn</b> or <b>Windows + Shift + S</b>.<br>
+        🍎 <b>Mac:</b> Press <b>Command + Shift + 4</b> to select the area.<br>
+        📱 <b>iPad:</b> Press <b>Top (or Side) button + Home</b> (or <b>Volume Up</b> if no Home button).<br>
+        📱 <b>Android tablet / phone:</b> Press <b>Power + Volume Down</b> at the same time.<br>
+        💻 <b>Chromebook:</b> Press <b>Ctrl + Show Windows</b> (rectangle key) to capture.<br><br>
+        ✅ After your screenshot is ready → send it to your teacher in chat.
       </div>
     </div>
 
@@ -329,8 +332,6 @@
 
     function regenerateStory(){ if(currentLevel) generateStory(currentLevel); }
     function goToPage2(){ document.getElementById('page1').style.display='none'; document.getElementById('page2').style.display='flex'; }
-    function toggleContinue(){ document.getElementById('continue-btn').disabled=!document.getElementById('verify-check').checked; }
-    function submitWork(){ alert("✅ Work submitted! Thank you."); }
 
     // === TROPHY CHECK ===
     function markWord(el){ el.classList.add('used'); checkTrophy(); }
