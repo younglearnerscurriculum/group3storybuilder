@@ -159,23 +159,24 @@
           <div id="story-box-final">Your story will appear here...</div>
           <textarea id="story-editor" placeholder="Edit your story here..."></textarea>
         </div>
-       <div>
-  <h3>🎨 Illustrator</h3>
-  <small>Draw below (finger/stylus on tablet) or write a description.</small>
-  <canvas id="draw-canvas"></canvas>
+        <div>
+          <h3>🎨 Illustrator</h3>
+          <small>Draw below (finger/stylus on tablet) or write a description.</small>
+          <canvas id="draw-canvas"></canvas>
 
-  <!-- Drawing Toolbar -->
-  <div class="canvas-controls">
-    <label>✏️ Color:
-      <input type="color" id="pen-color" value="#000000">
-    </label>
-    <label>📏 Thickness:
-      <input type="range" id="pen-size" min="1" max="10" value="3">
-    </label>
-    <button onclick="setEraser()">🧽 Eraser</button>
-    <button onclick="clearCanvas()">🧹 Clear All</button>
-  </div>
-</div>
+          <!-- Drawing Toolbar -->
+          <div class="canvas-controls">
+            <label>✏️ Color:
+              <input type="color" id="pen-color" value="#000000">
+            </label>
+            <label>📏 Thickness:
+              <input type="range" id="pen-size" min="1" max="10" value="3">
+            </label>
+            <button onclick="setEraser()">🧽 Eraser</button>
+            <button onclick="clearCanvas()">🧹 Clear All</button>
+          </div>
+        </div>
+      </div>
 
       <div id="trophy">🏆 Great job! You reached the requirement!</div>
 
@@ -362,63 +363,63 @@
     document.getElementById('story-editor').addEventListener('input',checkTrophy);
 
     // === DRAWING CANVAS ===
-const canvas=document.getElementById('draw-canvas');
-const ctx=canvas.getContext('2d');
-let drawing=false;
-let penColor="#000000";
-let penSize=3;
-let erasing=false;
+    const canvas=document.getElementById('draw-canvas');
+    const ctx=canvas.getContext('2d');
+    let drawing=false;
+    let penColor="#000000";
+    let penSize=3;
+    let erasing=false;
 
-function resizeCanvas(){ 
-  canvas.width=canvas.offsetWidth; 
-  canvas.height=canvas.offsetHeight; 
-}
-window.addEventListener('resize',resizeCanvas); 
-resizeCanvas();
+    function resizeCanvas(){ 
+      canvas.width=canvas.offsetWidth; 
+      canvas.height=canvas.offsetHeight; 
+    }
+    window.addEventListener('resize',resizeCanvas); 
+    resizeCanvas();
 
-function getX(e){ 
-  return e.touches?e.touches[0].clientX-canvas.getBoundingClientRect().left:e.clientX-canvas.getBoundingClientRect().left; 
-}
-function getY(e){ 
-  return e.touches?e.touches[0].clientY-canvas.getBoundingClientRect().top:e.clientY-canvas.getBoundingClientRect().top; 
-}
+    function getX(e){ 
+      return e.touches?e.touches[0].clientX-canvas.getBoundingClientRect().left:e.clientX-canvas.getBoundingClientRect().left; 
+    }
+    function getY(e){ 
+      return e.touches?e.touches[0].clientY-canvas.getBoundingClientRect().top:e.clientY-canvas.getBoundingClientRect().top; 
+    }
 
-function startDraw(e){ 
-  drawing=true; 
-  ctx.beginPath(); 
-  ctx.moveTo(getX(e),getY(e)); 
-  e.preventDefault(); 
-}
-function draw(e){ 
-  if(!drawing)return; 
-  ctx.lineWidth=penSize; 
-  ctx.lineCap="round"; 
-  ctx.strokeStyle=erasing?"#FFFFFF":penColor; 
-  ctx.lineTo(getX(e),getY(e)); 
-  ctx.stroke(); 
-  e.preventDefault(); 
-}
-function stopDraw(){ drawing=false; ctx.closePath(); }
+    function startDraw(e){ 
+      drawing=true; 
+      ctx.beginPath(); 
+      ctx.moveTo(getX(e),getY(e)); 
+      e.preventDefault(); 
+    }
+    function draw(e){ 
+      if(!drawing)return; 
+      ctx.lineWidth=penSize; 
+      ctx.lineCap="round"; 
+      ctx.strokeStyle=erasing?"#FFFFFF":penColor; 
+      ctx.lineTo(getX(e),getY(e)); 
+      ctx.stroke(); 
+      e.preventDefault(); 
+    }
+    function stopDraw(){ drawing=false; ctx.closePath(); }
 
-canvas.addEventListener('mousedown',startDraw);
-canvas.addEventListener('mousemove',draw);
-canvas.addEventListener('mouseup',stopDraw);
-canvas.addEventListener('mouseout',stopDraw);
-canvas.addEventListener('touchstart',startDraw);
-canvas.addEventListener('touchmove',draw);
-canvas.addEventListener('touchend',stopDraw);
+    canvas.addEventListener('mousedown',startDraw);
+    canvas.addEventListener('mousemove',draw);
+    canvas.addEventListener('mouseup',stopDraw);
+    canvas.addEventListener('mouseout',stopDraw);
+    canvas.addEventListener('touchstart',startDraw);
+    canvas.addEventListener('touchmove',draw);
+    canvas.addEventListener('touchend',stopDraw);
 
-function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
-function setEraser(){ erasing=!erasing; }
+    function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+    function setEraser(){ erasing=!erasing; }
 
-// Toolbar controls
-document.getElementById('pen-color').addEventListener('input',e=>{
-  penColor=e.target.value; 
-  erasing=false;
-});
-document.getElementById('pen-size').addEventListener('input',e=>{
-  penSize=e.target.value;
-});
+    // Toolbar controls
+    document.getElementById('pen-color').addEventListener('input',e=>{
+      penColor=e.target.value; 
+      erasing=false;
+    });
+    document.getElementById('pen-size').addEventListener('input',e=>{
+      penSize=e.target.value;
+    });
   </script>
 </body>
 </html>
