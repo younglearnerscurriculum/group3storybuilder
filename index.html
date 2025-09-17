@@ -177,6 +177,7 @@
     <footer>All rights reserved © Young Learners Curriculum 2025</footer>
   </div>
 
+  <!-- === SCRIPT === -->
   <script>
     // === DATE ===
     document.getElementById('date').textContent =
@@ -207,7 +208,9 @@
     function saveTeam(){
       const r1=document.getElementById('role1').value+": "+document.getElementById('role1-name').value;
       const r2=document.getElementById('role2').value+": "+document.getElementById('role2-name').value;
-      const r3=document.getElementById('role3-name').value?document.getElementById('role3').value+": "+document.getElementById('role3-name').value:"";
+      const r3=document.getElementById('role3-name').value
+        ? document.getElementById('role3').value+": "+document.getElementById('role3-name').value
+        : "";
       document.getElementById('team-names').textContent=[r1,r2,r3].filter(Boolean).join(" | ");
     }
 
@@ -248,47 +251,49 @@
       startTimer(); // start 15 min when level chosen
     }
 
-    {
-  "easy": [
-    "[name] went to the [place]. They had a [object]. They used it. They felt [feeling].",
-    "[name] walked to the [place]. They carried a [object]. They played with it. They were [feeling].",
-    "At the [place], [name] found a [object]. They picked it up. They looked at it. They felt [feeling].",
-    "[name] had a [object]. They brought it to the [place]. They used it there. They felt [feeling].",
-    "[name] entered the [place]. They found a [object]. They played happily. They were [feeling].",
-    "[name] carried a [object] into the [place]. They looked around. They played with it. They were [feeling].",
-    "In the [place], [name] held a [object]. They showed it to a friend. They smiled. They were [feeling].",
-    "[name] took a [object] to the [place]. They shared it with friends. They laughed. They felt [feeling].",
-    "[name] walked through the [place]. They found a [object]. They played with it. They were [feeling].",
-    "[name] and friends went to the [place]. They brought a [object]. They used it together. They felt [feeling]."
-  ],
+    // === STORY TEMPLATES ===
+    const templates = {
+      easy: [
+        "[name] went to the [place]. They had a [object]. They used it. They felt [feeling].",
+        "[name] walked to the [place]. They carried a [object]. They played with it. They were [feeling].",
+        "At the [place], [name] found a [object]. They picked it up. They looked at it. They felt [feeling].",
+        "[name] had a [object]. They brought it to the [place]. They used it there. They felt [feeling].",
+        "[name] entered the [place]. They found a [object]. They played happily. They were [feeling].",
+        "[name] carried a [object] into the [place]. They looked around. They played with it. They were [feeling].",
+        "In the [place], [name] held a [object]. They showed it to a friend. They smiled. They were [feeling].",
+        "[name] took a [object] to the [place]. They shared it with friends. They laughed. They felt [feeling].",
+        "[name] walked through the [place]. They found a [object]. They played with it. They were [feeling].",
+        "[name] and friends went to the [place]. They brought a [object]. They used it together. They felt [feeling]."
+      ],
 
-  "normal": [
-    "[name] and [friend] went to the [place]. They carried a [object]. They wanted to [activity]. Suddenly, [problem]. They [solution]. They felt [emotion]. Finally, they [ending].",
-    "At the [place], [name] showed [friend] a [object]. They tried to [activity]. Soon, [problem]. They worked to [solution]. They felt [emotion]. At last, they [ending].",
-    "[friend] met [name] at the [place]. They had a [object]. They began to [activity]. Then [problem]. They [solution]. They were [emotion]. Finally, they [ending].",
-    "[name] and [friend] carried a [object] into the [place]. They wanted to [activity]. But [problem]. They [solution]. They felt [emotion]. Finally, they [ending].",
-    "[name] brought a [object] to the [place]. [friend] joined them. They started to [activity]. But [problem]. They quickly [solution]. They were [emotion]. Finally, they [ending].",
-    "[name] and [friend] went to the [place] to [activity]. They had a [object]. But then, [problem]. They [solution]. They felt [emotion]. In the end, they [ending].",
-    "One day, [name] and [friend] visited the [place]. They carried a [object]. They wanted to [activity]. But [problem]. They worked to [solution]. They were [emotion]. Finally, they [ending].",
-    "At the [place], [friend] gave [name] a [object]. They wanted to [activity]. Suddenly, [problem]. They [solution]. They felt [emotion]. At the end, they [ending].",
-    "[name] and [friend] went to the [place]. They carried a [object]. They planned to [activity]. But [problem]. They [solution]. They were [emotion]. Finally, they [ending].",
-    "[friend] and [name] entered the [place]. They had a [object]. They tried to [activity]. Then [problem]. They [solution]. They felt [emotion]. At last, they [ending]."
-  ],
+      normal: [
+        "[name] and [friend] went to the [place]. They carried a [object]. They wanted to [activity]. Suddenly, [problem]. They [solution]. They felt [emotion]. Finally, they [ending].",
+        "At the [place], [name] showed [friend] a [object]. They tried to [activity]. Soon, [problem]. They worked to [solution]. They felt [emotion]. At last, they [ending].",
+        "[friend] met [name] at the [place]. They had a [object]. They began to [activity]. Then [problem]. They [solution]. They were [emotion]. Finally, they [ending].",
+        "[name] and [friend] carried a [object] into the [place]. They wanted to [activity]. But [problem]. They [solution]. They felt [emotion]. Finally, they [ending].",
+        "[name] brought a [object] to the [place]. [friend] joined them. They started to [activity]. But [problem]. They quickly [solution]. They were [emotion]. Finally, they [ending].",
+        "[name] and [friend] went to the [place] to [activity]. They had a [object]. But then, [problem]. They [solution]. They felt [emotion]. In the end, they [ending].",
+        "One day, [name] and [friend] visited the [place]. They carried a [object]. They wanted to [activity]. But [problem]. They worked to [solution]. They were [emotion]. Finally, they [ending].",
+        "At the [place], [friend] gave [name] a [object]. They wanted to [activity]. Suddenly, [problem]. They [solution]. They felt [emotion]. At the end, they [ending].",
+        "[name] and [friend] went to the [place]. They carried a [object]. They planned to [activity]. But [problem]. They [solution]. They were [emotion]. Finally, they [ending].",
+        "[friend] and [name] entered the [place]. They had a [object]. They tried to [activity]. Then [problem]. They [solution]. They felt [emotion]. At last, they [ending]."
+      ],
 
-  "challenge": [
-    "[name] and [friend] entered the [place] with a [object]. They wanted to [activity]. The [sensory] was all around. Suddenly, [problem]. '[dialogue]' shouted [friend]. They [solution]. They felt [emotion]. Finally, they [ending].",
-    "At the [place], [name] carried a [object]. [friend] said '[dialogue]'. They started to [activity]. Then [problem]. They [solution]. The [sensory] filled the air. They felt [emotion]. In the end, they [ending].",
-    "[name] showed [friend] a [object] in the [place]. They planned to [activity]. Suddenly, [problem]. '[dialogue]' said [friend]. They [solution]. The [sensory] surrounded them. They felt [emotion]. Finally, they [ending].",
-    "[friend] met [name] at the [place]. They had a [object]. They tried to [activity]. The [sensory] was everywhere. Suddenly, [problem]. '[dialogue]' said [name]. They [solution]. They felt [emotion]. Finally, they [ending].",
-    "[name] and [friend] brought a [object] to the [place]. They wanted to [activity]. The [sensory] made it exciting. Suddenly, [problem]. '[dialogue]' shouted [friend]. They [solution]. They were [emotion]. At last, they [ending].",
-    "One day, [name] and [friend] went to the [place]. They carried a [object]. They wanted to [activity]. But [problem]. '[dialogue]' called [name]. They [solution]. The [sensory] surrounded them. They were [emotion]. Finally, they [ending].",
-    "At the [place], [name] held a [object]. '[dialogue]' said [friend]. They began to [activity]. Then [problem]. They [solution]. The [sensory] made it hard. They felt [emotion]. Finally, they [ending].",
-    "[friend] and [name] entered the [place] with a [object]. They planned to [activity]. Suddenly, [problem]. '[dialogue]' said [friend]. They [solution]. The [sensory] was all around. They felt [emotion]. Finally, they [ending].",
-    "[name] carried a [object] into the [place]. '[dialogue]' said [friend]. They wanted to [activity]. But [problem]. They [solution]. The [sensory] made it strange. They felt [emotion]. In the end, they [ending].",
-    "At the [place], [friend] gave [name] a [object]. They started to [activity]. Suddenly, [problem]. '[dialogue]' was heard. They [solution]. The [sensory] filled the air. They were [emotion]. Finally, they [ending]."
-  ]
-}
+      challenge: [
+        "[name] and [friend] entered the [place] with a [object]. They wanted to [activity]. The [sensory] was all around. Suddenly, [problem]. '[dialogue]' shouted [friend]. They [solution]. They felt [emotion]. Finally, they [ending].",
+        "At the [place], [name] carried a [object]. [friend] said '[dialogue]'. They started to [activity]. Then [problem]. They [solution]. The [sensory] filled the air. They felt [emotion]. In the end, they [ending].",
+        "[name] showed [friend] a [object] in the [place]. They planned to [activity]. Suddenly, [problem]. '[dialogue]' said [friend]. They [solution]. The [sensory] surrounded them. They felt [emotion]. Finally, they [ending].",
+        "[friend] met [name] at the [place]. They had a [object]. They tried to [activity]. The [sensory] was everywhere. Suddenly, [problem]. '[dialogue]' said [name]. They [solution]. They felt [emotion]. Finally, they [ending].",
+        "[name] and [friend] brought a [object] to the [place]. They wanted to [activity]. The [sensory] made it exciting. Suddenly, [problem]. '[dialogue]' shouted [friend]. They [solution]. They were [emotion]. At last, they [ending].",
+        "One day, [name] and [friend] went to the [place]. They carried a [object]. They wanted to [activity]. But [problem]. '[dialogue]' called [name]. They [solution]. The [sensory] surrounded them. They were [emotion]. Finally, they [ending].",
+        "At the [place], [name] held a [object]. '[dialogue]' said [friend]. They began to [activity]. Then [problem]. They [solution]. The [sensory] made it hard. They felt [emotion]. Finally, they [ending].",
+        "[friend] and [name] entered the [place] with a [object]. They planned to [activity]. Suddenly, [problem]. '[dialogue]' said [friend]. They [solution]. The [sensory] was all around. They felt [emotion]. Finally, they [ending].",
+        "[name] carried a [object] into the [place]. '[dialogue]' said [friend]. They wanted to [activity]. But [problem]. They [solution]. The [sensory] made it strange. They felt [emotion]. In the end, they [ending].",
+        "At the [place], [friend] gave [name] a [object]. They started to [activity]. Suddenly, [problem]. '[dialogue]' was heard. They [solution]. The [sensory] filled the air. They were [emotion]. Finally, they [ending]."
+      ]
+    };
 
+    // === STORY GENERATION ===
     function generateStory(level){
       if(!level)return alert("Please select a level first!");
       const tlist=templates[level];
